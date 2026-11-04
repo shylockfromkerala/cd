@@ -1,4 +1,3 @@
-```lex
 %{
 #include <stdio.h>
 %}
@@ -20,4 +19,6 @@ int main()
     yylex();
     return 0;
 }
-```
+
+
+
