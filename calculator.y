@@ -39,8 +39,7 @@ int main()
     return 0;
 }
 
-int yyerror(char *s)
+void yyerror(char *s)
 {
     printf("Invalid expression\n");
-    return 0;
 }
