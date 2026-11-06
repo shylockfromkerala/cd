@@ -1,114 +1,124 @@
 #include <stdio.h>
+#include <string.h>
+
+#define MAX 10
+
+int n, m;
+int trans[MAX][MAX][MAX];      // NFA transitions
+int dfaStates[100][MAX];       // Stores DFA states as subsets
+int dfaTrans[100][MAX];        // DFA transition table
+int dfaCount = 0;
+
+// Check if two subsets are equal
+int equal(int a[], int b[])
+{
+    for(int i = 0; i < n; i++)
+        if(a[i] != b[i])
+            return 0;
+    return 1;
+}
+
+// Find subset in DFA state list
+int findState(int subset[])
+{
+    for(int i = 0; i < dfaCount; i++)
+        if(equal(dfaStates[i], subset))
+            return i;
+    return -1;
+}
 
 int main()
 {
-    int n, m, i, j, k;
-    int trans[10][10][10];
-    int dfa[100][10];
-    int states[100][10];
-    int count = 1;
+    int i, j, k;
 
-    printf("Enter number of states: ");
+    printf("Enter number of NFA states: ");
     scanf("%d", &n);
 
-    printf("Enter number of symbols: ");
+    printf("Enter number of input symbols: ");
     scanf("%d", &m);
 
-    printf("Enter NFA transition table (-1 for no transition):\n");
+    memset(trans, 0, sizeof(trans));
 
-    for (i = 0; i < n; i++)
+    // Input transition matrices
+    for(k = 0; k < m; k++)
     {
-        for (j = 0; j < m; j++)
-        {
-            int num;
-            printf("q%d on symbol %d: ", i, j);
-            scanf("%d", &num);
+        printf("Enter transition matrix for symbol %d:\n", k);
 
-            if (num == -1)
-                trans[i][j][0] = -1;
-            else
-            {
-                trans[i][j][0] = num;
-                scanf("%d", &trans[i][j][1]);
-            }
-        }
+        for(i = 0; i < n; i++)
+            for(j = 0; j < n; j++)
+                scanf("%d", &trans[k][i][j]);
     }
 
-    for (i = 0; i < n; i++)
-        states[0][i] = 0;
+    // Initial DFA state = {q0}
+    memset(dfaStates, 0, sizeof(dfaStates));
+    dfaStates[0][0] = 1;
+    dfaCount = 1;
 
-    states[0][0] = 1;
+    int front = 0;
 
-    for (i = 0; i < count; i++)
+    while(front < dfaCount)
     {
-        for (j = 0; j < m; j++)
+        for(k = 0; k < m; k++)
         {
-            int newset[10] = {0};
+            int newSubset[MAX] = {0};
 
-            for (k = 0; k < n; k++)
+            // For every state in current DFA state
+            for(i = 0; i < n; i++)
             {
-                if (states[i][k])
+                if(dfaStates[front][i])
                 {
-                    int p;
-
-                    for (p = 0; p < 2; p++)
+                    for(j = 0; j < n; j++)
                     {
-                        if (trans[k][j][p] != -1)
-                            newset[trans[k][j][p]] = 1;
+                        if(trans[k][i][j])
+                            newSubset[j] = 1;
                     }
                 }
             }
 
-            int found = -1;
+            int index = findState(newSubset);
 
-            for (k = 0; k < count; k++)
+            if(index == -1)
             {
-                int same = 1;
-
-                int x;
-                for (x = 0; x < n; x++)
-                {
-                    if (states[k][x] != newset[x])
-                    {
-                        same = 0;
-                        break;
-                    }
-                }
-
-                if (same)
-                {
-                    found = k;
-                    break;
-                }
+                memcpy(dfaStates[dfaCount], newSubset, sizeof(newSubset));
+                index = dfaCount;
+                dfaCount++;
             }
 
-            if (found == -1)
-            {
-                for (k = 0; k < n; k++)
-                    states[count][k] = newset[k];
-
-                found = count;
-                count++;
-            }
-
-            dfa[i][j] = found;
+            dfaTrans[front][k] = index;
         }
+
+        front++;
     }
 
-    printf("\nDFA Transition Table:\n");
+    // Display DFA states
+    printf("\nDFA States:\n");
 
-    for (i = 0; i < count; i++)
+    for(i = 0; i < dfaCount; i++)
     {
         printf("D%d = { ", i);
 
-        for (j = 0; j < n; j++)
-            if (states[i][j])
+        for(j = 0; j < n; j++)
+        {
+            if(dfaStates[i][j])
                 printf("q%d ", j);
+        }
 
         printf("}\n");
+    }
 
-        for (j = 0; j < m; j++)
-            printf("  Symbol %d -> D%d\n", j, dfa[i][j]);
+    // Display DFA transition table
+    printf("\nDFA Transition Table:\n");
+
+    for(i = 0; i < dfaCount; i++)
+    {
+        printf("D%d : ", i);
+
+        for(j = 0; j < m; j++)
+        {
+            printf("%d ", dfaTrans[i][j]);
+        }
+
+        printf("\n");
     }
 
     return 0;
