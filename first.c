@@ -4,7 +4,6 @@
 
 char production[20][20];
 char first[20][20];
-char follow[20][20];
 
 int n;
 
