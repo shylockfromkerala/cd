@@ -28,6 +28,8 @@ validvariable.y
 vowelconsonant.l
 word.l
 substring.l
+validparanthesis.l
+validparanthesis.y
 
 
 yacc -d yaccpragram_name.y
