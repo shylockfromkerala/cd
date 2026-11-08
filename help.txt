@@ -34,6 +34,11 @@ pattern.l
 pattern.y
 
 
+lex program.l
+gcc lex.yy.c -o output 
+./output
+
+
 yacc -d yaccpragram_name.y
 lex lexprogramname.l
 gcc y.tab.c lex.yy.c -o var
