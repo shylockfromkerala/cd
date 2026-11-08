@@ -15,7 +15,7 @@ identifier.l
 integerdecimal.l
 intermediatecode.c
 lexicalanalyser.c
-minimizeddfa.c
+minimizedfa.c
 name.l
 nfa-dfa.c
 numbers.l
