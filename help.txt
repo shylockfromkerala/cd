@@ -30,6 +30,8 @@ word.l
 substring.l
 validparanthesis.l
 validparanthesis.y
+pattern.l
+pattern.y
 
 
 yacc -d yaccpragram_name.y
