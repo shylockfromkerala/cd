@@ -28,3 +28,9 @@ validvariable.y
 vowelconsonant.l
 word.l
 substring.l
+
+
+yacc -d yaccpragram_name.y
+lex lexprogramname.l
+gcc y.tab.c lex.yy.c -o var
+./var
