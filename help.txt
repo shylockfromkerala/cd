@@ -9,8 +9,12 @@ enfa-nfa.c
 first.c
 firstandfollow.c
 follow.c
-forloopsyntax.l
-forloopsyntax.y
+for.l
+for.y
+while.l
+while.y
+dowhile.l
+dowhile.y
 identifier.l
 integerdecimal.l
 intermediatecode.c
